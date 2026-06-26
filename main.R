@@ -16,8 +16,12 @@ library(fixest)
 set.seed(123)
 SMFQ_above_cutoff <- 0.203
 
+SMFQ_above_cutoff <- 0.203
+
 config <- list(
 
+#Seeds must not overlap
+#This removes unintended correlations between different stages of the simulation.
 #Seeds must not overlap
 #This removes unintended correlations between different stages of the simulation.
 
