@@ -86,6 +86,11 @@ calculate_fsm_percentage <- function(pupil_fsm_totals) {
 prepare_data <- function(filepath) {
   # Read the raw schools data and keep the rows used in the simulation.
   # Return regional totals, urban-rural school counts, and the overall FSM share.
+  if ((!file.exists(filepath) || file.info(filepath)$size == 0) &&
+      exists("download_schools_data", mode = "function")) {
+    filepath <- download_schools_data(filepath)
+  }
+
   schools_raw <- read_schools_data(filepath)
   schools_base <- filter_school_base(schools_raw)
   breakdown_columns <- get_breakdown_columns()

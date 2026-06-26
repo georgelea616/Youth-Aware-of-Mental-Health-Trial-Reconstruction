@@ -130,19 +130,5 @@ minimise_schools <- function(schools_trial, config) {
     assign_first_school(config) |>
     run_allocation(config)
   
-  return(schools_trial)
-  #Sanity checks: 
-  #Check assignment to treatment and assignment to each variable. 
-  #Should be a 1:1 split betwen them. 
-  overall_balance <- table(schools_trial$treatment)
-  balance_region <- table(schools_trial$region_simple, schools_trial$treatment) 
-  balance_urban <- table(schools_trial$urban_rural_simple, schools_trial$treatment) 
-  balance_fsm <- table(schools_trial$fsm_tertile, schools_trial$treatment)
-  balance_mh <- table(schools_trial$prior_mh_support, schools_trial$treatment)
-
-  #statistical tests for the balance between them. 
-  chisq.test(balance_region) 
-  chisq.test(balance_urban) 
-  chisq.test(balance_fsm)
-    
+  return(schools_trial) 
 } 

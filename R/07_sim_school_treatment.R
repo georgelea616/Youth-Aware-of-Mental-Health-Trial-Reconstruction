@@ -51,10 +51,54 @@ randomise_pupil_counts <- function(n, total_pupils, pupil_sample_bounds) {
   # Scale to sum to total_pupils
   randomised <- round((random_vals / sum(random_vals)) * total_pupils)
   
-  # Adjust for rounding to match exact total
+  # First, clamp any values that exceed bounds from rounding
+  # This maintains the core values while fixing violations
+  violations <- randomised > pupil_sample_bounds[2]
+  if (any(violations)) {
+    # Clamp to upper bound and adjust the rounding difference
+    randomised[violations] <- pupil_sample_bounds[2]
+  }
+  
+  violations <- randomised < pupil_sample_bounds[1]
+  if (any(violations)) {
+    # Clamp to lower bound and adjust the rounding difference
+    randomised[violations] <- pupil_sample_bounds[1]
+  }
+  
+  # Now adjust for rounding to match exact total while respecting bounds
   diff <- total_pupils - sum(randomised)
+  
   if (diff != 0) {
-    randomised[which.max(randomised)] <- randomised[which.max(randomised)] + diff
+    # Get indices sorted by current count (descending)
+    indices <- order(randomised, decreasing = TRUE)
+    
+    for (idx in indices) {
+      if (diff == 0) break
+      
+      if (diff > 0) {
+        # Need to increase this school's count (only if space available)
+        space_available <- pupil_sample_bounds[2] - randomised[idx]
+        if (space_available > 0) {
+          increase <- min(diff, space_available)
+          randomised[idx] <- randomised[idx] + increase
+          diff <- diff - increase
+        }
+      } else if (diff < 0) {
+        # Need to decrease this school's count (only if space available)
+        space_available <- randomised[idx] - pupil_sample_bounds[1]
+        if (space_available > 0) {
+          decrease <- min(-diff, space_available)
+          randomised[idx] <- randomised[idx] - decrease
+          diff <- diff + decrease
+        }
+      }
+    }
+    
+    # If diff is still non-zero, we have a constraint conflict
+    # This shouldn't happen with valid input, but handle gracefully
+    if (diff != 0) {
+      warning("Could not distribute all pupils while respecting bounds. Remaining diff: ", diff)
+    }
   }
   
   randomised
@@ -83,16 +127,4 @@ run_school_treatment <- function(schools_trial, config) {
   schools_trial <- assign_pupil_counts(schools_trial, config)
   schools_trial <- select_school_variables(schools_trial)
   return(schools_trial)
-
-  #Sanity checks
-  print ("Compliance probs:")
-  print(config$compliance_probs)
-  print ("Compliance allocations: ")
-  print(table(schools$treatment))
-  print("Needed randomised pupil counts: (Treatment, Control): ")
-  print(config$YAM_pupils, config$usual_practice_pupils)
-  print("Actual randomised pupil counts: (Treatment, Control): ")
-  print(
-    sum(schools$randomised_pupil_counts[schools$treatment == "Treatment"]),
-    sum(schools$randomised_pupil_counts[schools$treatment == "Control"]))
 }

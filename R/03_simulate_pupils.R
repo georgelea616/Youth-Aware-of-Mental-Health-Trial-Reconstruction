@@ -20,7 +20,7 @@ simulate_pupil_genders <- make_simulator("gender_levels", "gender_probs")
 # Simulates pupil ethnicity values
 simulate_pupil_ethnicities <- make_simulator("ethnicity_levels", "ethnicity_probs")
 
-# Simulates prior poor mental health status
+# Simulates prior poor mental health status values
 simulate_previous_poor_mh <- make_simulator("previous_poor_mh_levels", "previous_poor_mh_probs")
 
 # Simulates SEN status values

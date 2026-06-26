@@ -42,3 +42,4 @@ run_sim_outcome <- function(pupils, config) {
   pupils$smfq_followup <- simulate_followup_scores(pupils$smfq_baseline, pupils$treatment, config)
   pupils
 }
+

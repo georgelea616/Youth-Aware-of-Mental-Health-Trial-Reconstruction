@@ -22,11 +22,7 @@ run_cace_analysis <- function(pupils_joined, config) {
       urban_rural_simple = factor(urban_rural_simple)
     )
   
-  # --------------------------------------------------
-  # 2. Instrumental Variable (CACE) model
-  # --------------------------------------------------
-  # We use feols with the syntax: outcome ~ exogenous_vars | endogenous_var ~ instrument
-  # We cluster by school_id to match your primary mixed model logic.
+#Cace variables
   
   cace_model <- feols(
     smfq_followup ~ 

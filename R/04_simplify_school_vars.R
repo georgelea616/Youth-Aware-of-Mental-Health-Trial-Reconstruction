@@ -1,7 +1,3 @@
-#My key tests will be finding the NA values post-transformation.
-
-
-
 
 # Converts selected school columns to factors. This is a necessary step before transformation. 
 factorise_school_variables <- function(schools) {

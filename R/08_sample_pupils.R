@@ -13,11 +13,5 @@ sample_pupils_within_schools <- function(pupils, schools) {
     dplyr::ungroup()
 
     return(pupils_sampled)
-
-    #Sanity checks
-    print("Sum of needed pupils:")
-    print(config$YAM_pupils + config$usual_practice_pupils)
-    print("Sum of sampled pupils:")
-    print(length(unique(pupils$pupil_id)))
 }
 
